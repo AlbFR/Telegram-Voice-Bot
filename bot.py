@@ -10,20 +10,21 @@ TOKEN = json.load(f)
 TOKEN = TOKEN["TOKEN"]
 
 
-bot = telebot.TeleBot(TOKEN, parse_mode=None)
+bot = telebot.TeleBot(TOKEN)
 
 @bot.message_handler(commands=["siri_start","siri_help"])
 def help(message):
     message_to_be_sent = "/siri_start - Lists commands\n"
     message_to_be_sent += "/siri_help - Lists commands\n"
+    message_to_be_sent += "/repo - Link to github repository"
     message_to_be_sent += "/talk <text> - Bot says <text>\n"
     message_to_be_sent += "/siri_status\n"
     bot.send_message(message.chat.id, message_to_be_sent)
 
-@bot.message_handler(commands=["siri_status"])
-def handle_status(message):
-    bot.send_message(message.chat.id, "Ando de la maraca hmno")
 
+@bot.message_handler(commands=['repo'])
+def handle_talk(message):
+	bot.send_message(message.chat.id, "https://github.com/AlbFR/Telegram-Voice-Bot")
 
 @bot.message_handler(commands=['talk'])
 def handle_talk(message):
@@ -37,12 +38,16 @@ def handle_talk(message):
 	print("Message sent by: ", message.from_user.first_name)
 	audio_path = "audiofiles/"+usr_id+"."
 	createAudio(message.text, audio_path)
-	time.sleep(2)
+	time.sleep(1)
 	cmd = "ffmpeg -y -i " + audio_path
 	cmd += "mp3 -c:a libopus -b:a 8k " + audio_path
 	cmd += "ogg"
 	os.system(cmd) # Parses the .mp3 onto .ogg (format of telegram voice)
 	bot.send_voice(message.chat.id, open(audio_path+"ogg", 'rb'))
+
+@bot.message_handler(commands=["siri_status"])
+def handle_status(message):
+    bot.send_message(message.chat.id, "Ando de la maraca hmno")
 	
 def createAudio(text, path):
 	audio = gTTS(text, lang="es", tld="com.mx")
