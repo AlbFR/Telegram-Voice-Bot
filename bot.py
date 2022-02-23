@@ -13,7 +13,7 @@ f.close()
 
 bot = telebot.TeleBot(TOKEN)
 
-@bot.message_handler(commands=["siri_start","siri_help"])
+@bot.message_handler(commands=['siri_start','siri_help'])
 def help(message):
 	message_to_be_sent = "/siri_start - Lists commands\n"
 	message_to_be_sent += "/siri_help - Lists commands\n"
@@ -49,12 +49,10 @@ def handle_talk(message):
 
 	usr_id = message.from_user.id
 	usr_id = str(usr_id)
-		
+
 			
 	audio_path = "audiofiles/"+usr_id+"."
-	print(createAudio(msg, audio_path))
 	if createAudio(msg, audio_path):
-		print("flag2")	
 		time.sleep(1)
 
 		cmd = "ffmpeg -nostats -loglevel 0 -y -i " + audio_path
@@ -72,7 +70,6 @@ def handle_talk(message):
 		except:
 			print("An error has occured trying to send the audio :/")
 	else:
-		print("flag")
 		bot.send_message(message.chat.id, "Escribe algo que pueda decir -.-")	
 
 @bot.message_handler(commands=["siri_status"])
@@ -95,7 +92,7 @@ def createAudio(text, path):
 
 def main():
 	os.system("rm -r audiofiles")
-	time.sleep(0.5)
+	time.sleep(0.3)
 	os.system("mkdir audiofiles")
 	try:
 		print("Bot running...")
